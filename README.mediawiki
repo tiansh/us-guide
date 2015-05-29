@@ -1,0 +1,38 @@
+= 用户脚本安装的帮助页面 =
+
+这里是一个简易的供用户安装用户脚本的网页框架。<br />
+可以在网页的锚点中设置参数来针对特定脚本显示安装帮助，也可以用`iframe`嵌入到别的网页中来减少重复工作。
+
+例如如下链接会展示如何安装知乎免登录脚本<br />
+http://tiansh.github.io/us-guide/install.html#name=%E7%9F%A5%E4%B9%8E%E5%85%8D%E7%99%BB%E5%BD%95&installurl=https://tiansh.github.io/us-else/zhihu_visitor/Zhihu_Visitor.user.js&description=%E6%9F%A5%E7%9C%8B%E5%AE%8C%E6%95%B4%E7%9A%84%E5%9B%9E%E7%AD%94%E8%80%8C%E6%97%A0%E9%9C%80%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95&author=tiansh&version=2.1&supporturl=https://github.com/tiansh/us-else/issues&homepageurl=https://tiansh.github.io/us-else/zhihu_visitor/&compatible=firefox+greasemonkey&compatible=chrome+tampermonkey&&compatible=opera+tampermonkey&color=#EEF2F5,#000,#026B76,#298BD8,#fff
+
+任何人都可以使用该网页或将该网页嵌入到你的网页中，嵌入后将只显示针对浏览器的操作说明。
+
+= 锚点参数 =
+
+网页的各项参数说明如下
+
+* '''name'''：（必填）脚本的名称
+* '''installurl'''：（必填）脚本的安装地址，必须是 .user.js 文件
+* '''description'''：（可选）脚本的描述
+* '''author'''：（可选）脚本的作者
+* '''version'''：（可选）脚本的版本
+* '''supporturl'''：（可选）脚本的支持页面，一般对应 issue 页面
+* '''homepageurl'''：（可选）脚本的主页
+* '''compatible'''：（可选，可重复）格式为`浏览器`或`浏览器+脚本宿主`
+* '''color'''：（可选）网页使用的配色，要求是用逗号分隔的五个`#rrggbb`颜色
+
+== 浏览器与脚本宿主 ===
+
+脚本可以识别并显示的浏览器名称和脚本宿主名称包括：
+* firefox
+** greasemonkey
+* opera
+** tampermonkey
+** violentmonkey
+* chrome
+** tampermonkey
+* safari
+** javascriptblocker
+** tampermonkey
+

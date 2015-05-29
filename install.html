@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8" />
+  <title>用户脚本安装帮助</title>
+  <script>
+    var args = location.hash.replace(/^#/, '').split('&').map(function (p) {
+      var p = [].slice.call(p.match(/^([^=]*)=(.*)$/) || [p, p, ''], 1).map(decodeURIComponent);
+      return [p[0].toLowerCase(), p[1]];
+    }).filter(function (p) { return !!p[0].length; });
+    var arg = function (k) {
+      return args.filter(function (p) { return p[0] === k; }).map(function (p) { return p[1]; });
+    };
+    if (!function validate() {
+      var name = arg('name');
+      if (name.length !== 1 || name[0].length === 0) return false;
+      var installurl = arg('installurl');
+      if (installurl.length !== 1 || installurl[0].length === 0) return false;
+      var a = document.createElement('a'); a.href = installurl[0];
+      return a.pathname.match(/[^/]\.user\.js$/);
+    }()) args = [];
+  </script>
+  <style>
+    html, body, h1, h2 { margin: 0; padding: 0; }
+    body { font-size: 18px; line-height: 150%; }
+    a { font-weight: bold; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    #header { width: 100%; padding: 60px 0; }
+    body.embedded #header { display: none; }
+    #title { font-size: 200%; margin: 0 60px; }
+    #description { font-size: 140%; padding: 20px 0 0; margin: 0 60px; }
+    #info { float: left; clear: left; width: 44%; padding: 40px 0; }
+    body.embedded #info { display: none; }
+    .info-item { padding: 0 0 0 6em; margin: 10px 0 0 20px; text-indent: -6em; }
+    .info-title { font-weight: bold; margin-right: 1em; }
+    .info-data { word-wrap: break-word; word-break: break-word; word-break: break-all;   }
+    #guide { float: right; clear: right; width: 54%; padding: 40px 0; }
+    body.embedded #guide { padding: 0; width: 100%; }
+    #guide.guide-only { width: 100%; }
+    .browser { margin: 10px 20px 30px 0; padding: 0 0 0 96px; }
+    .browser .browser-icon { display: block; width: 64px; height: 64px; margin: 0 0 -64px -80px; }
+    .needfill, .notfill, #not-supported { display: none; }
+    #not-supported.current-browser { display: block; }
+
+    @media screen and (max-width: 800px) {
+      #info, #guide { width: 100%; clear: both; }
+    }
+    body { min-width: 360px; }
+
+    body { background: #eee; color: #000; }
+    a { color: #37e; }
+    #header { background: #333; color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <h1 id="title"><span class="autofill autofill-name">用户脚本安装帮助</span></h1>
+    <div id="description" class="needfill needfill-description autofill autofill-description"></div>
+  </div>
+  <div id="info" class="needfill needfill-installurl needfill-name">
+    <div class="p info-item needfill needfill-installurl"><span class="info-title">安装地址 </span><span class="info-data"><a target="_blank" href="#" class="linkfill linkfill-installurl autofill autofill-installurl"></a></span></div>
+    <div class="p info-item needfill needfill-version"><span class="info-title">当前版本 </span><span class="info-data autofill autofill-version"></span></div>
+    <div class="p info-item needfill needfill-author"><span class="info-title">脚本作者 </span><span class="info-data autofill autofill-author"></span></div>
+    <div class="p info-item needfill needfill-homepageurl"><span class="info-title">脚本主页 </span><span class="info-data"><a target="_blank" href="#" class="linkfill linkfill-homepageurl autofill autofill-homepageurl"></a></span></div>
+    <div class="p info-item needfill needfill-supporturl"><span class="info-title">问题汇报 </span><span class="info-data"><a target="_blank" href="#" class="linkfill linkfill-supporturl autofill autofill-supporturl"></a></span></div>
+  </div>
+  <div id="guide">
+    <script>
+      var browsers = {
+        'firefox': {
+          'ua': [/^Mozilla\/5.0 \([^)]+; rv:[\d.]+\) Gecko\/[\d]{8} Firefox\/[\d.]+$/],
+          'name': 'Firefox 浏览器',
+          'addon': '附加组件',
+          'url': 'http://www.mozilla.org/en-US/firefox/all/#zh-CN',
+          'icon': './img/logo/firefox.png',
+          'host': {
+            'greasemonkey': {
+              'url': 'https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/',
+              'name': 'GreaseMonkey'
+            }
+          }
+        },
+        'opera': {
+          'ua': [
+            /^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+ OPR\/[\d.]+$/,
+            /^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+ OPR\/[\d.]+ \(Edition beta\)$/
+          ],
+          'name': 'Opera 浏览器',
+          'addon': '扩展',
+          'url': 'http://www.opera.com/zh-cn',
+          'icon': './img/logo/opera.png',
+          'host': {
+            'tampermonkey': {
+              'url': 'https://addons.opera.com/zh-cn/extensions/details/tampermonkey-beta/',
+              'name': 'TamperMonkey Beta'
+            },
+            'violentmonkey': {
+              'url': 'https://addons.opera.com/zh-cn/extensions/details/violent-monkey/?display=zh',
+              'name': '暴力猴'
+            }
+          }
+        },
+        'chrome': {
+          'ua': [/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+$/],
+          'name': 'Chrome 浏览器',
+          'addon': '扩展程序',
+          'url': 'https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html?standalone=1',
+          'icon': './img/logo/chrome.png',
+          'host': {
+            'tampermonkey': {
+              'url': 'https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN',
+              'name': 'TamperMonkey'
+            }
+          }
+        },
+        'safari': {
+          'ua': [/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Version\/[\d.]+ Safari\/[\d.]+$/],
+          'name': 'Safari 浏览器',
+          'addon': '扩展',
+          'url': 'http://www.apple.com/cn/safari/',
+          'icon': './img/logo/safari.png',
+          'host': {
+            'javascriptblocker': {
+              'url': 'http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4',
+              'name': 'JavaScript Blocker'
+            },
+            'tampermonkey': {
+              'url': 'http://tampermonkey.net/index.php?ext=dhdg&amp;browser=safari',
+              'name': 'TamperMonkey'
+            }
+          }
+        }
+      };
+      document.writeln('<div class="needfill needfill-name needfill-installurl" id="not-supported">这个用户脚本可能无法在您的浏览器上安装，您可以试试下面列出的浏览器。</div>');
+      var supports = [];
+      arg('compatible').forEach(function (compitem) {
+        var m = [].slice.call(compitem.match(/^([^+]*)(\+(.*))?$/) || [], 1);
+        var browser = m[0], addon = (m[2] || '').split('|').filter(Boolean);
+        if (!Object.hasOwnProperty.call(browsers, browser)) return;
+        (addon.length ? addon : Object.keys(browsers[browser].host)).forEach(function (a) {
+          if (!Object.hasOwnProperty.call(browsers[browser].host, a)) return;
+          if (!supports.some(function (i) {
+            if (i[0] !== browser) return false;
+            if (i[1].indexOf(a) === -1) i[1] = i[1].concat([a])
+            return true;
+          })) supports.push([browser, [a]]);
+        });
+      });
+      if (supports.length === 0 || arg('installurl').length !== 1 || arg('name').length !== 1) {
+        supports = [];
+        Object.keys(browsers).forEach(function (browser) {
+          supports.push([browser, Object.keys(browsers[browser].host)]);
+        });
+      }
+      supports.forEach(function (support) {
+        var browser = support[0], hosts = support[1];
+        var info = browsers[browser];
+        var template = (function () { /*!HTML
+
+<div class="browser browser-{{browser}}">
+  <a href="{{url}}" class="browser-icon"><img src="{{icon}}" alt="{{name}}" width="64" height="64" /></a>
+  <div>
+    {{name}}需要安装{{host}}来运行用户脚本。<br />
+    <span class="needfill needfill-installurl needfill-name">如果您已经安装了上述{{addon}}，您可以<a class="linkfill linkfill-installurl" href="#">点此安装脚本</a>，并根据{{addon}}的提示确认安装。</span>
+    <span class="notfill notfill-installurl notfill-name">安装了上述{{addon}}后，点击脚本的安装链接，您的浏览器将会确认并安装脚本。</span>
+  </div>
+</div>
+        */ }).toString().split(/\r\n|\r|\n/).slice(1, -1).join('\n');
+        var html = template.replace(/{{(\w+)}}/g, function (_, e) {
+          if (e === 'host') return hosts.map(function (host) {
+            var hostinfo = info.host[host];
+            return ' <a target="_blank" href="' + hostinfo.url + '">' + hostinfo.name + ' ' + info.addon + '</a> ';
+          }).join('或');
+          if (e === 'browser') return browser;
+          if (Object.hasOwnProperty.call(info, e)) return info[e];
+          return '';
+        });
+        document.write(html);
+      });
+    </script>
+    <noscript>
+    <div class="browser browser-firefox current-browser">
+      <a href="http://www.mozilla.org/en-US/firefox/all/#zh-CN" class="browser-icon"><img src="./img/logo/firefox.png" alt="Firefox 浏览器" height="64" width="64"></a>
+      <div>
+        Firefox 浏览器需要安装 <a target="_blank" href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/">GreaseMonkey 附加组件</a> 来运行用户脚本。<br>
+        <span>安装了上述附加组件后，点击脚本的安装链接，您的浏览器将会确认并安装脚本。</span>
+      </div>
+    </div>
+    <div class="browser browser-opera">
+      <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="./img/logo/opera.png" alt="Opera 浏览器" height="64" width="64"></a>
+      <div>
+        Opera 浏览器需要安装 <a target="_blank" href="https://addons.opera.com/zh-cn/extensions/details/tampermonkey-beta/">TamperMonkey Beta 扩展</a> 或 <a target="_blank" href="https://addons.opera.com/zh-cn/extensions/details/violent-monkey/?display=zh">暴力猴 扩展</a> 来运行用户脚本。<br>
+        <span>安装了上述扩展后，点击脚本的安装链接，您的浏览器将会确认并安装脚本。</span>
+      </div>
+    </div><div class="browser browser-chrome">
+      <a href="https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html?standalone=1" class="browser-icon"><img src="./img/logo/chrome.png" alt="Chrome 浏览器" height="64" width="64"></a>
+      <div>
+        Chrome 浏览器需要安装 <a target="_blank" href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN">TamperMonkey 扩展程序</a> 来运行用户脚本。<br>
+        <span>安装了上述扩展程序后，点击脚本的安装链接，您的浏览器将会确认并安装脚本。</span>
+      </div>
+    </div><div class="browser browser-safari">
+      <a href="http://www.apple.com/cn/safari/" class="browser-icon"><img src="./img/logo/safari.png" alt="Safari 浏览器" height="64" width="64"></a>
+      <div>
+        Safari 浏览器需要安装 <a target="_blank" href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker 扩展</a> 或 <a target="_blank" href="http://tampermonkey.net/index.php?ext=dhdg&amp;browser=safari">TamperMonkey 扩展</a> 来运行用户脚本。<br>
+        <span>安装了上述扩展后，点击脚本的安装链接，您的浏览器将会确认并安装脚本。</span>
+      </div>
+    </div>
+    <style>#guide { width: 100%; }</style>
+    </noscript>
+  </div>
+  <script>
+    var needfill = document.getElementsByClassName('needfill');
+    var autofill = document.getElementsByClassName('autofill');
+    var links = document.getElementsByTagName('a');
+    var fillEach = function (type, handler) {
+      [].slice.call(document.getElementsByClassName(type), 0).forEach(function (d) {
+        var attrs = [].slice.call(d.classList, 0).filter(function (c) { return c.indexOf(type + '-') === 0; });
+        if (attrs.length === 0) return;
+        attrs = attrs.map(function (attr) { return attr.slice(type.length + 1); });
+        handler(d, attrs.map(arg));
+      });
+    };
+    fillEach('needfill', function (dom, data) {
+      if (data.filter(function (i) { return i.length !== 1; }).length === 0)
+        dom.classList.remove('needfill');
+    });
+    fillEach('notfill', function (dom, data) {
+      if (data.filter(function (i) { return i.length !== 1; }).length !== 0)
+        dom.classList.remove('notfill');
+    });
+    fillEach('autofill', function (dom, data) {
+      if (data.length === 1 && data[0].length === 1) dom.textContent = data[0][0];
+    });
+    fillEach('linkfill', function (dom, data) {
+      if (data.length === 1 && data[0].length === 1) dom.href = data[0][0];
+    });
+  </script>
+  <script>
+    var currentBrowser = (function () {
+      var userAgent = navigator.userAgent, result = null;
+      Object.keys(browsers).forEach(function (browser) {
+        if (browsers[browser].ua.some(function (ua) { return ua.test(userAgent); })) result = browser;
+      });
+      return result;
+    }());
+    if (currentBrowser !== null) {
+      var supports = document.getElementsByClassName('browser'), found = false;
+      [].slice.call(supports, 0).forEach(function (brd) {
+        if (brd.classList.contains('browser-' + currentBrowser)) {
+          brd.parentNode.insertBefore(brd, brd.parentNode.firstChild);
+          brd.classList.add('current-browser');
+          found = true;
+        }
+      });
+      if (!found)
+        document.getElementById('not-supported').classList.add('current-browser');
+    }
+  </script>
+  <script>
+    if (!document.getElementById('info').clientWidth)
+      document.getElementById('guide').classList.add('guide-only');
+    if (self !== top) {
+      document.body.classList.add('embedded');
+      setTimeout(function () {
+        top.postMessage('{"installheight":' + document.body.scrollHeight + '}', '*');
+      });
+    }
+  </script>
+  <script>
+    var colors = (arg('color')[0] || '').split(',');
+    if (colors.length === 5) {
+      if (colors.every(function (color) {
+        return color.match(/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/);
+      })) {
+        document.writeln('<style> body { background: ' + colors[0] + '; color: ' + colors[1] + '; } a { color: ' + colors[2] + '; } #header { background: ' + colors[3] + '; color: ' + colors[4] + '; } </style>')
+      }
+    }
+  </script>
+</body>
+</html>
