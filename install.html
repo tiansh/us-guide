@@ -265,6 +265,10 @@
       setTimeout(function () {
         top.postMessage('{"installheight":' + document.body.scrollHeight + '}', '*');
       });
+      (function () {
+       var a = document.getElementsByClassName('linkfill-installurl'), l = a.length, i;
+       for (i = 0; i < l; i++) a[i].target = '_blank';
+      }());
     }
   </script>
   <script>
