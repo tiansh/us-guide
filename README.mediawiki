@@ -38,6 +38,8 @@
 脚本可以识别并显示的浏览器名称和脚本宿主名称包括：
 * firefox
 ** greasemonkey
+** tampermonkey
+** violentmonkey
 * opera
 ** tampermonkey
 ** violentmonkey
